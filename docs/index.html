@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tendances des marchés</title>
+<style>
+:root{--bg:#f5f3ee;--panel:#fffdf9;--ink:#1b2430;--mute:#5f6b7a;--line:#e1ddd2;--up:#0d7c66;--down:#b9470f;--mid:#7b8794;--upbg:#dff3ec;--downbg:#fbe6da;--midbg:#eceae4;--warn:#7a5200;--warnbg:#fff2cf}
+@media (prefers-color-scheme:dark){:root{--bg:#10161d;--panel:#18212b;--ink:#e9eef3;--mute:#9aa8b6;--line:#2a3745;--up:#3cc3a6;--down:#f0925a;--mid:#8794a3;--upbg:#12342d;--downbg:#3a2316;--midbg:#222c37;--warn:#f1c35b;--warnbg:#3a2f12}}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-variant-numeric:tabular-nums;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)}
+main{max-width:980px;margin:0 auto;padding:22px 16px 60px}
+h1,h2{font-family:ui-serif,Georgia,"Times New Roman",serif;font-weight:700;letter-spacing:-.01em}
+h1{font-size:1.9rem;line-height:1.15;margin:0 0 6px}h2{font-size:1.25rem;margin:0}
+.mute{color:var(--mute);font-size:.9rem}
+#banniere{background:var(--warnbg);color:var(--warn);border-radius:8px;padding:8px 12px;margin:12px 0;font-size:.9rem}
+.bar{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;margin:16px 0 8px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px}
+button,select{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 12px;cursor:pointer}
+button.on{border-color:var(--ink);font-weight:650}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 4px}
+.chip{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:.88rem}
+.chip b{display:block;font-size:.95rem}
+.up{color:var(--up)}.down{color:var(--down)}.mid{color:var(--mid)}
+section{margin-top:24px}
+.entete{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:2px solid var(--ink);padding-bottom:6px}
+.note{font-size:.85rem;color:var(--mute);margin:6px 0 0}
+.row{display:grid;grid-template-columns:minmax(120px,1.1fr) minmax(170px,1.4fr) 92px 170px 110px;gap:6px 14px;align-items:center;padding:10px 4px;border-bottom:1px solid var(--line)}
+.nm b{display:block;font-size:1rem}.nm small,.et small{color:var(--mute);font-size:.8rem}
+.badge{display:inline-block;padding:2px 9px;border-radius:999px;font-size:.82rem;font-weight:650}
+.badge.up{background:var(--upbg)}.badge.down{background:var(--downbg)}.badge.mid{background:var(--midbg);color:var(--mute)}
+.nouveau{font-size:.7rem;font-weight:700;margin-left:6px;padding:1px 6px;border-radius:4px;background:var(--ink);color:var(--bg)}
+.pts{display:inline-flex;gap:3px;margin-left:8px;vertical-align:middle}.pts i{width:9px;height:9px;border-radius:2px;background:var(--line)}
+.pts i.u{background:var(--up)}.pts i.d{background:var(--down)}
+.px{text-align:right;font-weight:600}.v{font-size:.82rem;display:flex;gap:10px;justify-content:flex-end}.v span{text-align:right;min-width:48px}
+.v em{display:block;font-style:normal;color:var(--mute);font-size:.7rem}
+svg{display:block}
+.off{opacity:.55;font-size:.85rem;padding:8px 4px;border-bottom:1px solid var(--line)}
+ul.ev{list-style:none;margin:8px 0 0;padding:0}ul.ev li{padding:7px 0;border-bottom:1px solid var(--line);font-size:.92rem}
+details{margin-top:18px;font-size:.92rem}summary{cursor:pointer;color:var(--mute)}details p{margin:8px 0}
+footer{margin-top:28px;font-size:.8rem;color:var(--mute)}
+#toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:999px;font-size:.9rem}
+@media (max-width:760px){.row{grid-template-columns:1fr auto;grid-template-areas:"nm px" "et et" "v sp"}.nm{grid-area:nm}.px{grid-area:px}.et{grid-area:et}.v{grid-area:v;justify-content:flex-start}.sp{grid-area:sp;justify-self:end}}
+</style></head><body><main>
+<header><h1>Tendances des marchés</h1><p class="mute" id="maj">Chargement…</p></header>
+<div id="banniere" hidden>Données de démonstration (simulées) : la vraie mise à jour remplacera ce fichier après le premier lancement de l'agent.</div>
+<div class="bar"><div class="tabs" id="onglets"></div>
+<select id="tri" aria-label="Trier"><option value="recent">Trier : changement récent</option><option value="score">Trier : force de la tendance</option><option value="var7">Trier : variation sur 7 jours</option><option value="nom">Trier : ordre de la liste</option></select>
+<label class="mute"><input type="checkbox" id="recent7"> Changements des 7 derniers jours seulement</label></div>
+<div class="chips" id="resume"></div>
+<div id="liste"></div>
+<section><div class="entete"><h2>Changements récents</h2><span class="mute">30 derniers jours</span></div><ul class="ev" id="events"></ul></section>
+<details><summary>Comment sont calculées les tendances ?</summary>
+<p>Trois signaux sur les bougies journalières complètes : <b>croisement</b> (moyenne mobile 20 jours au-dessus ou en dessous de la moyenne 50 jours), <b>cassure</b> (le prix franchit le plus haut ou le plus bas des 20 derniers jours, la position est gardée jusqu'à la cassure inverse) et <b>momentum</b> (le prix a monté ou baissé sur 60 jours). Les trois petits carrés de chaque ligne les montrent dans cet ordre (vert : haussier, orange : baissier, gris : neutre).</p>
+<p><b>Haussière</b> : au moins 2 signaux haussiers sur 3. <b>Baissière</b> : au moins 2 signaux baissiers. <b>Mixte</b> : les signaux se contredisent. Ces règles sont celles de nos tests, fixées d'avance et jamais ajustées après coup.</p>
+<p>« j » désigne une bougie journalière (une séance pour les actions). ATR : amplitude moyenne quotidienne du prix, en pourcentage.</p></details>
+<footer>Information uniquement, pas un conseil financier. Les tendances décrivent le passé et ne prédisent rien : des résultats historiques ne garantissent pas les résultats futurs. Données Yahoo Finance, bougies journalières complètes uniquement.</footer>
+</main><div id="toast" hidden></div>
+<script>
+const ETAT={'1':{c:'up',t:'Haussière',i:'▲'},'0':{c:'mid',t:'Mixte',i:'◆'},'-1':{c:'down',t:'Baissière',i:'▼'}};
+const SIG={croisement:'Croisement SMA 20/50',cassure:'Cassure sur 20 jours',momentum:'Momentum sur 60 jours'};
+const $=id=>document.getElementById(id);
+let DATA=null,FILTRE='tout',vue=null;
+const nf=(x,d)=>x.toLocaleString('fr-BE',{minimumFractionDigits:d,maximumFractionDigits:d});
+const prix=x=>nf(x,x>=1000?0:x>=10?2:x>=1?3:5);
+const pct=x=>x==null?'—':(x>=0?'+':'−')+nf(Math.abs(x),1)+' %';
+const cl=x=>x==null?'mid':x>0?'up':x<0?'down':'mid';
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function spark(p,c){const mn=Math.min(...p),mx=Math.max(...p),r=mx-mn||1,w=104,h=30;
+return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" role="img" aria-label="Évolution sur ${p.length} jours"><polyline fill="none" stroke="var(--${c})" stroke-width="1.8" stroke-linejoin="round" points="${p.map((v,i)=>(i/(p.length-1)*(w-2)+1).toFixed(1)+','+(h-2-(v-mn)/r*(h-4)).toFixed(1)).join(' ')}"/></svg>`}
+function ligne(a){
+const e=ETAT[a.etat],pts=Object.keys(SIG).map(k=>`<i class="${a.signaux[k]>0?'u':a.signaux[k]<0?'d':''}" title="${SIG[k]} : ${a.signaux[k]>0?'haussier':a.signaux[k]<0?'baissier':'neutre'}"></i>`).join('');
+const dep=a.jours_depuis_changement,nouveau=dep!=null&&dep<=1?'<span class="nouveau">NOUVEAU</span>':'';
+return `<div class="row"><div class="nm"><b>${esc(a.nom)}</b><small>${esc(a.symbole)} · bougie du ${a.derniere_bougie}</small></div>
+<div class="et"><span class="badge ${e.c}">${e.i} ${e.t}</span><span class="pts" aria-label="Score ${a.score} sur 3">${pts}</span>${nouveau}<br><small>${dep==null?'aucun changement sur la période':'depuis '+dep+' j'} · écart à la SMA50 ${pct(a.ecart_sma50)} · ATR ${nf(a.atr_pct,1)} %</small></div>
+<div class="px">${prix(a.prix)}</div>
+<div class="v"><span class="${cl(a.var_1j)}">${pct(a.var_1j)}<em>1 j</em></span><span class="${cl(a.var_7j)}">${pct(a.var_7j)}<em>7 j</em></span><span class="${cl(a.var_30j)}">${pct(a.var_30j)}<em>30 j</em></span></div>
+<div class="sp">${spark(a.graphique,e.c)}</div></div>`}
+function ilYa(iso){const m=Math.round((Date.now()-new Date(iso))/6e4);return m<1?"à l'instant":m<60?`il y a ${m} min`:m<48*60?`il y a ${Math.round(m/60)} h`:`il y a ${Math.round(m/1440)} j`}
+function prochaine(){const n=new Date(),p=new Date(Date.UTC(n.getUTCFullYear(),n.getUTCMonth(),n.getUTCDate(),0,45));if(p<=n)p.setUTCDate(p.getUTCDate()+1);return p.toLocaleString('fr-BE',{weekday:'long',hour:'2-digit',minute:'2-digit'})}
+function trier(l,t){const c=[...l],cle={recent:a=>a.jours_depuis_changement==null?9999:a.jours_depuis_changement,score:a=>-Math.abs(a.score),var7:a=>-Math.abs(a.var_7j||0)};
+return t==='nom'?c:c.sort((a,b)=>cle[t](a)-cle[t](b))}
+function render(){
+if(!DATA)return;const D=DATA;
+$('maj').textContent=`Mis à jour ${ilYa(D.genere_le)} · prochaine mise à jour prévue ${prochaine()} (heure locale) · bougies journalières complètes`;
+$('banniere').hidden=!D.demo;
+const noms=Object.keys(D.classes);
+$('onglets').innerHTML=['tout',...noms].map(k=>`<button class="${FILTRE===k?'on':''}" data-k="${k}">${k==='tout'?'Tout':D.classes[k].titre}</button>`).join('');
+[...$('onglets').children].forEach(b=>b.onclick=()=>{FILTRE=b.dataset.k;render()});
+const ok=D.actifs.filter(a=>!a.erreur),sel=ok.filter(a=>(FILTRE==='tout'||a.classe===FILTRE)&&(!$('recent7').checked||(a.jours_depuis_changement!=null&&a.jours_depuis_changement<=7)));
+$('resume').innerHTML=noms.filter(k=>FILTRE==='tout'||k===FILTRE).map(k=>{const l=ok.filter(a=>a.classe===k),n=e=>l.filter(a=>a.etat===e).length;
+return `<div class="chip"><b>${D.classes[k].titre}</b><span class="up">▲ ${n(1)}</span> · <span class="mid">◆ ${n(0)}</span> · <span class="down">▼ ${n(-1)}</span></div>`}).join('');
+$('liste').innerHTML=noms.filter(k=>FILTRE==='tout'||k===FILTRE).map(k=>{
+const l=trier(sel.filter(a=>a.classe===k),$('tri').value),off=D.actifs.filter(a=>a.erreur&&a.classe===k);
+return `<section><div class="entete"><h2>${D.classes[k].titre}</h2><span class="mute">${l.length} actif${l.length>1?'s':''}</span></div><p class="note">${esc(D.classes[k].note)}</p>`+
+(l.length?l.map(ligne).join(''):'<p class="mute">Aucun actif ne correspond au filtre.</p>')+
+off.map(a=>`<div class="off">${esc(a.nom)} (${esc(a.symbole)}) : données indisponibles (${esc(a.erreur)})</div>`).join('')+'</section>'}).join('');
+$('events').innerHTML=D.changements.length?D.changements.slice(0,20).map(e=>`<li><b>${e.date}</b> · ${esc(e.nom)} passe de ${ETAT[e.de].t.toLowerCase()} à <span class="${ETAT[e.vers].c}"><b>${ETAT[e.vers].t.toLowerCase()}</b></span></li>`).join(''):'<li class="mute">Aucun changement sur la période.</li>'}
+async function charger(){
+try{const r=await fetch('data/tendances.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error(r.status);const nv=await r.json();
+const nouveau=DATA&&nv.genere_le!==DATA.genere_le;DATA=nv;render();
+if(nouveau){const t=$('toast');t.textContent='Nouvelles données reçues';t.hidden=false;setTimeout(()=>t.hidden=true,4000)}}
+catch(e){if(!DATA)$('maj').textContent="Impossible de charger les données ("+e.message+"). Ouvrez la page via GitHub Pages ou un petit serveur local."}}
+$('tri').onchange=render;$('recent7').onchange=render;
+charger();setInterval(charger,10*60*1000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)charger()});
+</script></body></html>

@@ -1,0 +1,39 @@
+{
+  "classes": {
+    "crypto": {
+      "titre": "Cryptomonnaies",
+      "note": "Seule piste qui ressort de nos tests : la variante acheteuse seulement a réduit les pertes des années baissières (backtest 2014-2026, avec biais de survie, et l'année 2017 pèse très lourd). Aucune garantie.",
+      "symboles": [
+        {"symbole": "BTC-USD", "nom": "Bitcoin"}, {"symbole": "ETH-USD", "nom": "Ethereum"},
+        {"symbole": "SOL-USD", "nom": "Solana"}, {"symbole": "ADA-USD", "nom": "Cardano"},
+        {"symbole": "DOGE-USD", "nom": "Dogecoin"}, {"symbole": "BNB-USD", "nom": "BNB"},
+        {"symbole": "DOT-USD", "nom": "Polkadot"}, {"symbole": "LINK-USD", "nom": "Chainlink"},
+        {"symbole": "AVAX-USD", "nom": "Avalanche"}, {"symbole": "LTC-USD", "nom": "Litecoin"}
+      ]
+    },
+    "forex": {
+      "titre": "Forex",
+      "note": "Aucun avantage net constaté sur 25 ans de tests (spreads, commission et swaps inclus). Les tendances sont affichées à titre d'information.",
+      "symboles": [
+        {"symbole": "EURUSD=X", "nom": "EUR/USD"}, {"symbole": "GBPUSD=X", "nom": "GBP/USD"},
+        {"symbole": "USDJPY=X", "nom": "USD/JPY"}, {"symbole": "USDCHF=X", "nom": "USD/CHF"},
+        {"symbole": "AUDUSD=X", "nom": "AUD/USD"}, {"symbole": "USDCAD=X", "nom": "USD/CAD"},
+        {"symbole": "NZDUSD=X", "nom": "NZD/USD"}, {"symbole": "EURGBP=X", "nom": "EUR/GBP"}
+      ]
+    },
+    "actions": {
+      "titre": "Actions et ETF",
+      "note": "Pas encore testé avec ces règles : à valider avant toute décision.",
+      "symboles": [
+        {"symbole": "SPY", "nom": "S&P 500 (ETF SPY)"}, {"symbole": "QQQ", "nom": "Nasdaq 100 (ETF QQQ)"},
+        {"symbole": "AAPL", "nom": "Apple"}, {"symbole": "MSFT", "nom": "Microsoft"},
+        {"symbole": "NVDA", "nom": "Nvidia"}, {"symbole": "AMZN", "nom": "Amazon"},
+        {"symbole": "GOOGL", "nom": "Alphabet"}, {"symbole": "META", "nom": "Meta"},
+        {"symbole": "JPM", "nom": "JPMorgan"}, {"symbole": "XOM", "nom": "Exxon Mobil"},
+        {"symbole": "ASML.AS", "nom": "ASML"}, {"symbole": "SAP.DE", "nom": "SAP"},
+        {"symbole": "MC.PA", "nom": "LVMH"}, {"symbole": "KBC.BR", "nom": "KBC Groupe"},
+        {"symbole": "UCB.BR", "nom": "UCB"}, {"symbole": "ABI.BR", "nom": "AB InBev"}
+      ]
+    }
+  }
+}
