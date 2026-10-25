@@ -1,0 +1,29 @@
+name: Mise à jour des tendances
+
+on:
+  schedule:
+    - cron: "45 0 * * *"        # chaque jour à 00:45 UTC, après la clôture des bougies de la veille
+  workflow_dispatch:             # bouton "Run workflow" pour lancer à la main
+
+permissions:
+  contents: write
+
+jobs:
+  maj:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python agent_tendance.py
+      - name: Publier les données
+        run: |
+          git config user.name "agent-tendance"
+          git config user.email "agent-tendance@users.noreply.github.com"
+          git add docs/data
+          git diff --cached --quiet || git commit -m "Tendances du $(date -u +%F)"
+          git push
